@@ -30,7 +30,17 @@ const navItems = [
   { to: '/tags', icon: Tag, label: 'Tags' },
 ]
 
-function NavItem({ to, icon, label }: { to: string; icon: typeof LayoutDashboard; label: string }) {
+function NavItem({
+  to,
+  icon,
+  label,
+  onClick,
+}: {
+  to: string
+  icon: typeof LayoutDashboard
+  label: string
+  onClick?: () => void
+}) {
   const location = useLocation()
   const isActive = location.pathname === to
   const activeBg = useColorModeValue('brand.50', 'whiteAlpha.100')
@@ -40,12 +50,7 @@ function NavItem({ to, icon, label }: { to: string; icon: typeof LayoutDashboard
 
   return (
     <Tooltip label={label} placement="right" hasArrow>
-      <Box
-        as={NavLink}
-        to={to}
-        w="full"
-        display="block"
-      >
+      <Box as={NavLink} to={to} w="full" display="block" onClick={onClick}>
         <Flex
           align="center"
           gap={3}
@@ -61,7 +66,7 @@ function NavItem({ to, icon, label }: { to: string; icon: typeof LayoutDashboard
           borderLeftWidth="3px"
           borderColor={isActive ? 'brand.500' : 'transparent'}
         >
-          <Icon as={icon} boxSize={4.5} flexShrink={0} />
+          <Icon as={icon} boxSize={4} flexShrink={0} />
           <Text>{label}</Text>
         </Flex>
       </Box>
@@ -71,9 +76,10 @@ function NavItem({ to, icon, label }: { to: string; icon: typeof LayoutDashboard
 
 interface SidebarProps {
   projectName: string
+  onNavClick?: () => void
 }
 
-export default function Sidebar({ projectName }: SidebarProps) {
+export default function Sidebar({ projectName, onNavClick }: SidebarProps) {
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100')
   const bg = useColorModeValue('white', 'surface.800')
 
@@ -94,7 +100,7 @@ export default function Sidebar({ projectName }: SidebarProps) {
       aria-label="Main navigation"
     >
       {/* Logo / Project name */}
-      <Flex align="center" gap={2.5} px={4} py={5} borderBottomWidth="1px" borderColor={borderColor}>
+      <Flex align="center" gap={2.5} px={4} py={4}>
         <Flex
           w={8}
           h={8}
@@ -108,9 +114,6 @@ export default function Sidebar({ projectName }: SidebarProps) {
         </Flex>
         <Box minW={0}>
           <Text fontSize="xs" fontWeight="semibold" color="brand.500" letterSpacing="wider" textTransform="uppercase">
-            GitStats
-          </Text>
-          <Text fontSize="sm" fontWeight="semibold" color="text.primary" noOfLines={1} title={projectName}>
             {projectName}
           </Text>
         </Box>
@@ -119,7 +122,7 @@ export default function Sidebar({ projectName }: SidebarProps) {
       {/* Nav links */}
       <VStack px={3} py={4} align="stretch" spacing={0.5} flex={1}>
         {navItems.map(item => (
-          <NavItem key={item.to} {...item} />
+          <NavItem key={item.to} {...item} onClick={onNavClick} />
         ))}
       </VStack>
 
@@ -133,7 +136,7 @@ export default function Sidebar({ projectName }: SidebarProps) {
         <Tooltip label="View on GitHub" placement="top">
           <Box
             as="a"
-            href="https://github.com"
+            href="https://github.com/HivarSoft/gitstats"
             target="_blank"
             rel="noopener noreferrer"
             color="text.muted"
